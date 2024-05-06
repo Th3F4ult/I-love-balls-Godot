@@ -1,0 +1,73 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbih5oeeq1na8"]
+
+[ext_resource type="Texture2D" uid="uid://b3ktoi76togwj" path="res://Dots/RED.png" id="1_qmd0r"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v1bmp"]
+radius = 16.0312
+
+[node name="Node2D" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("CircleShape2D_v1bmp")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D/CollisionShape2D"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_qmd0r")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(100, 0)
+shape = SubResource("CircleShape2D_v1bmp")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D/CollisionShape2D2"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_qmd0r")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 58)
+shape = SubResource("CircleShape2D_v1bmp")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D/CollisionShape2D3"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_qmd0r")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(100, 58)
+shape = SubResource("CircleShape2D_v1bmp")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D/CollisionShape2D4"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_qmd0r")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-51, -30)
+shape = SubResource("CircleShape2D_v1bmp")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D/CollisionShape2D5"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_qmd0r")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(49, -30)
+shape = SubResource("CircleShape2D_v1bmp")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D/CollisionShape2D6"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_qmd0r")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-51, 28)
+shape = SubResource("CircleShape2D_v1bmp")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D/CollisionShape2D7"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_qmd0r")
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(49, 28)
+shape = SubResource("CircleShape2D_v1bmp")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D/CollisionShape2D8"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_qmd0r")

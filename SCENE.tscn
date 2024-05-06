@@ -1,0 +1,179 @@
+[gd_scene load_steps=3 format=3 uid="uid://b86v6jrah0p70"]
+
+[sub_resource type="GDScript" id="GDScript_mokoy"]
+script/source = "extends Node2D
+var globpos = 0
+func _process(delta):
+	$CanvasLayer/Label.text = str(\"Current nodes: \", self.get_children().size()-7, \"/300\")
+func _input(event):
+	if Input.is_action_pressed(\"click\") and self.get_children().size()-7 <= 300:
+		Generate(event[\"position\"]+Vector2(globpos,0))
+	if Input.is_action_just_pressed(\"click2\"):
+		$PopupMenu.position = event[\"position\"]
+		$PopupMenu.popup()
+		$RayCast2D.position = event[\"position\"]
+	if Input.is_action_just_pressed(\"GeneratorAdd\"):
+		var generator = preload(\"res://NODE_GENERATOR.tscn\").instantiate(); generator.mode = \"fast\"; generator.position = get_local_mouse_position()+Vector2(globpos,0); add_child(generator)
+	if Input.is_action_just_pressed(\"GeneratorAddSlow\"):
+		var generator = preload(\"res://NODE_GENERATOR.tscn\").instantiate(); generator.mode = \"slow\"; generator.position = get_local_mouse_position()+Vector2(globpos,0); add_child(generator)
+	if Input.is_action_pressed(\"DeleteClick\"): $CanvasLayer/Label2.text = str(\"DELETE MODE!!\"); $RayCast2D.position = event[\"position\"]+Vector2(globpos,0); if $RayCast2D.get_collider(): $RayCast2D.get_collider().queue_free()
+	if Input.is_action_just_released(\"DeleteClick\"): $CanvasLayer/Label2.text = str(\"\")
+func Generate(positiontogen : Vector2i):
+	var dot = preload(\"res://DOT.tscn\").instantiate()
+	dot.position = positiontogen
+	add_child(dot)
+
+
+func DELETE(body):
+	body.queue_free()
+
+
+func POPUP(index):
+	match index:
+		0: get_tree().change_scene_to_file(\"res://SCENE.tscn\")
+		1: var triangle = preload(\"res://NODE_TRIANGLE.tscn\").instantiate(); triangle.position = $PopupMenu.position+Vector2i(globpos,0); add_child(triangle)
+		2: var hopper = preload(\"res://NODE_HOPPER.tscn\").instantiate(); hopper.position = $PopupMenu.position+Vector2i(globpos,0); add_child(hopper)
+		3: var box = preload(\"res://NODE_BOX.tscn\").instantiate(); box.position = $PopupMenu.position+Vector2i(globpos,0); add_child(box)
+		4: var kill = preload(\"res://NODE_DELETE.tscn\").instantiate(); kill.position = $PopupMenu.position+Vector2i(globpos,0); add_child(kill)
+		5: var generator = preload(\"res://NODE_GENERATOR.tscn\").instantiate(); generator.mode = \"slow\"; generator.position = $PopupMenu.position+Vector2i(globpos,0); add_child(generator)
+		6: var generator = preload(\"res://NODE_GENERATOR.tscn\").instantiate(); generator.mode = \"fast\"; generator.position = $PopupMenu.position+Vector2i(globpos,0); add_child(generator)
+		7: get_tree().paused = not get_tree().paused; $PopupMenu.toggle_item_checked(7)
+		8: if $RayCast2D.get_collider(): $RayCast2D.get_collider().queue_free()
+		9: $PopupMenu2.popup_centered()
+		10: if $RayCast2D.get_collider(): $RayCast2D.get_collider().scale = Vector2(-1,1)
+
+
+
+func LOAD_NEW(index):
+	match index:
+		0:
+			var generator1 = preload(\"res://NODE_GENERATOR.tscn\").instantiate()
+			generator1.mode = \"fast\"
+			generator1.position = Vector2i(200,550)
+			add_child(generator1)
+			var generator2 = preload(\"res://NODE_GENERATOR.tscn\").instantiate()
+			generator2.mode = \"fast\"
+			generator2.position = Vector2i(200,250)
+			add_child(generator2)
+			var generator3 = preload(\"res://NODE_GENERATOR.tscn\").instantiate()
+			generator3.mode = \"fast\"
+			generator3.position = Vector2i(200,400)
+			add_child(generator3)
+			var generator4 = preload(\"res://NODE_GENERATOR.tscn\").instantiate()
+			generator4.mode = \"fast\"
+			generator4.position = Vector2i(200,100)
+			add_child(generator4)
+		1:
+			var triangle = preload(\"res://NODE_TRIANGLE.tscn\").instantiate(); triangle.position = Vector2i(200,200); add_child(triangle)
+			var triangle2 = preload(\"res://NODE_TRIANGLE.tscn\").instantiate(); triangle2.position = Vector2i(triangle.position.x+190,triangle.position.y+90); add_child(triangle2)
+			var triangle3 = preload(\"res://NODE_TRIANGLE.tscn\").instantiate(); triangle3.position = Vector2i(triangle2.position.x+190,triangle2.position.y+90); add_child(triangle3)
+		2: var SCENE_PACK = preload(\"res://SCENE_PACKED_BALLS.tscn\").instantiate(); SCENE_PACK.position = $PopupMenu.position; add_child(SCENE_PACK)
+		3: $FileDialog.popup_centered(Vector2i(200,400))
+
+func SPAWN_SCENE_CUST(path):
+	var scene = load(path).instantiate()
+	add_child(scene)
+
+
+
+
+func MOVE(value):
+	globpos = value*100
+	$Camera2D.position.x = 578+(value*100)
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qwj7u"]
+size = Vector2(8262, 177)
+
+[node name="Node2D" type="Node2D"]
+process_mode = 3
+script = SubResource("GDScript_mokoy")
+
+[node name="PopupMenu2" type="PopupMenu" parent="."]
+size = Vector2i(239, 116)
+item_count = 4
+item_0/text = "4 fast generators"
+item_0/id = 0
+item_1/text = "Ramps"
+item_1/id = 1
+item_2/text = "Ball drop"
+item_2/id = 2
+item_3/text = "Instantiate Custom Scene..."
+item_3/id = 3
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(63, 0)
+target_position = Vector2(-145, -1)
+collide_with_areas = true
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(1338, 1345)
+shape = SubResource("RectangleShape2D_qwj7u")
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+process_mode = 3
+size = Vector2i(235, 278)
+item_count = 11
+item_0/text = "Restart"
+item_0/id = 0
+item_1/text = "Add triangle"
+item_1/id = 1
+item_2/text = "Add hopper"
+item_2/id = 2
+item_3/text = "Add box"
+item_3/id = 3
+item_4/text = "Add delete area"
+item_4/id = 4
+item_5/text = "Add generator"
+item_5/id = 5
+item_6/text = "Add generator (fast)"
+item_6/id = 6
+item_7/text = "Pause"
+item_7/checkable = 2
+item_7/id = 7
+item_8/text = "Remove this element"
+item_8/id = 8
+item_9/text = "Load composition"
+item_9/id = 9
+item_10/text = "Flip element"
+item_10/id = 10
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+ok_button_text = "Abrir"
+file_mode = 0
+access = 1
+filters = PackedStringArray("*.tscn", "*.TSCN")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(578, 322)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HScrollBar" type="HScrollBar" parent="CanvasLayer"]
+offset_left = 5.0
+offset_top = 619.0
+offset_right = 385.0
+offset_bottom = 627.0
+scale = Vector2(3, 3)
+custom_step = 1.0
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 945.0
+offset_top = 54.0
+offset_right = 985.0
+offset_bottom = 77.0
+
+[node name="Label2" type="Label" parent="CanvasLayer"]
+offset_left = 945.0
+offset_top = 181.0
+offset_right = 985.0
+offset_bottom = 204.0
+
+[connection signal="index_pressed" from="PopupMenu2" to="." method="LOAD_NEW"]
+[connection signal="body_entered" from="Area2D" to="." method="DELETE"]
+[connection signal="index_pressed" from="PopupMenu" to="." method="POPUP"]
+[connection signal="file_selected" from="FileDialog" to="." method="SPAWN_SCENE_CUST"]
+[connection signal="value_changed" from="CanvasLayer/HScrollBar" to="." method="MOVE"]

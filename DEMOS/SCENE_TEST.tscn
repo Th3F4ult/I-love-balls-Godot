@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://c6sgj1qra3038"]
+
+[ext_resource type="PackedScene" uid="uid://drp21opjyry6b" path="res://NODE_GENERATOR.tscn" id="1_j5j8u"]
+[ext_resource type="PackedScene" uid="uid://duonincreuaet" path="res://NODE_TRIANGLE.tscn" id="2_oxs24"]
+[ext_resource type="PackedScene" uid="uid://dbih5oeeq1na8" path="res://SCENE_PACKED_BALLS.tscn" id="3_37hof"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Node2D" parent="." instance=ExtResource("1_j5j8u")]
+position = Vector2(193, 184)
+
+[node name="Node2D2" parent="." instance=ExtResource("1_j5j8u")]
+position = Vector2(196, 105)
+
+[node name="Node2D3" parent="." instance=ExtResource("1_j5j8u")]
+position = Vector2(199, 28)
+
+[node name="Node2D4" parent="." instance=ExtResource("1_j5j8u")]
+position = Vector2(191, 264)
+
+[node name="Node2D5" parent="." instance=ExtResource("2_oxs24")]
+position = Vector2(259, 386)
+
+[node name="Node2D6" parent="." instance=ExtResource("2_oxs24")]
+position = Vector2(447, 474)
+
+[node name="Node2D8" parent="." instance=ExtResource("3_37hof")]
+position = Vector2(577, 556)

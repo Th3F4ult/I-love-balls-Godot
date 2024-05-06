@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://duonincreuaet"]
+
+[ext_resource type="Texture2D" uid="uid://clpbmxp78v2n4" path="res://TRIANGLESHAPE.png" id="1_mo3k4"]
+
+[node name="Node2D" type="StaticBody2D"]
+position = Vector2(70, 52)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-62, -44)
+polygon = PackedVector2Array(-8, -8, -4, -8, 11, 0, 65, 24, 181, 77, 181, 80, 171, 80, -8, 80)
+
+[node name="Triangleshape" type="Sprite2D" parent="."]
+position = Vector2(24, -7)
+texture = ExtResource("1_mo3k4")

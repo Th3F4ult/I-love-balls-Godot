@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://17t8ckmw6md0"]
+
+[ext_resource type="Texture2D" uid="uid://cqq3lwlvs3qig" path="res://BOX.png" id="1_cnxls"]
+
+[node name="Node2D" type="StaticBody2D"]
+position = Vector2(78, 58)
+
+[node name="BoxShape" type="Sprite2D" parent="."]
+position = Vector2(24, -7)
+texture = ExtResource("1_cnxls")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-64, -23)
+polygon = PackedVector2Array(-9, -10, -9, -7, 1, -7, 1, 105, 171, 105, 171, -7, 185, -7, 185, -10, 154, -10, 154, 93, 18, 93, 18, -10)

@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3 uid="uid://baj7qopjgvfl2"]
+
+[ext_resource type="PackedScene" uid="uid://duonincreuaet" path="res://NODE_TRIANGLE.tscn" id="1_0u8dt"]
+[ext_resource type="PackedScene" uid="uid://drp21opjyry6b" path="res://NODE_GENERATOR.tscn" id="2_lqx4d"]
+[ext_resource type="PackedScene" uid="uid://dp2xcgequl1ms" path="res://NODE_HOPPER.tscn" id="3_ofmhm"]
+[ext_resource type="PackedScene" uid="uid://17t8ckmw6md0" path="res://NODE_BOX.tscn" id="4_h1rsk"]
+[ext_resource type="PackedScene" uid="uid://nkepfu4lbkcl" path="res://NODE_DELETE.tscn" id="5_v86bs"]
+[ext_resource type="PackedScene" uid="uid://dbih5oeeq1na8" path="res://SCENE_PACKED_BALLS.tscn" id="6_uupfx"]
+
+[node name="PACK_2" type="Node2D"]
+
+[node name="Node2D" parent="." instance=ExtResource("1_0u8dt")]
+position = Vector2(152, 176)
+
+[node name="Node2D2" parent="." instance=ExtResource("1_0u8dt")]
+position = Vector2(492, 183)
+scale = Vector2(-1, 1)
+
+[node name="Node2D3" parent="." instance=ExtResource("2_lqx4d")]
+position = Vector2(144, 40)
+
+[node name="Node2D4" parent="." instance=ExtResource("2_lqx4d")]
+position = Vector2(502, 29)
+scale = Vector2(-1, 1)
+
+[node name="Node2D5" parent="." instance=ExtResource("3_ofmhm")]
+position = Vector2(209, 268)
+
+[node name="Node2D6" parent="." instance=ExtResource("4_h1rsk")]
+position = Vector2(295, 564)
+
+[node name="Area2D" parent="." instance=ExtResource("5_v86bs")]
+position = Vector2(315, 616)
+scale = Vector2(0.576736, 0.582255)
+
+[node name="Node2D7" parent="." instance=ExtResource("6_uupfx")]
+position = Vector2(285, 459)

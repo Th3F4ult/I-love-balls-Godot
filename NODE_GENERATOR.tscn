@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://drp21opjyry6b"]
+
+[ext_resource type="Texture2D" uid="uid://dwg500u3hppe7" path="res://GENERATOR.png" id="1_6yen5"]
+
+[sub_resource type="GDScript" id="GDScript_n70hb"]
+script/source = "extends StaticBody2D
+@onready var mode : String
+
+func _ready():
+	if mode == \"slow\":
+		$Timer.wait_time = 1
+	if mode == \"fast\":
+		$Timer.wait_time = 0.3
+
+func GENERATE():
+	get_node(\"/root/Node2D\").Generate(position+Vector2(-40,20))
+"
+
+[node name="Node2D" type="StaticBody2D"]
+position = Vector2(78, 58)
+script = SubResource("GDScript_n70hb")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="GENERATOR" type="Sprite2D" parent="."]
+position = Vector2(-29, 23)
+texture = ExtResource("1_6yen5")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-64, -23)
+polygon = PackedVector2Array(18, 24, 17, 57, 65, 70, 65, 78, 0, 78, 0, 4, 71, 4, 71, 23)
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(-20, 22)
+
+[connection signal="timeout" from="Timer" to="." method="GENERATE"]

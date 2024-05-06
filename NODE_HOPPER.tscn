@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://dp2xcgequl1ms"]
+
+[ext_resource type="Texture2D" uid="uid://bqyko7bfx4fnt" path="res://Dropper.png" id="1_xbyto"]
+
+[node name="Node2D" type="StaticBody2D"]
+position = Vector2(70, 52)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-31, -30)
+polygon = PackedVector2Array(48, 11, 59, 11, 119, 139, 120, 169, 123, 170, 123, 138, 63, 7, 47, 7, 47, 11)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="."]
+position = Vector2(-31, 8.52573)
+scale = Vector2(1, 0.824003)
+polygon = PackedVector2Array(160, 129.216, 160, 121.934, 177, 72.1772, 202, 1.78915, 213, -34.6185, 224, -34.6185, 224, -39.4728, 210, -39.4728, 195, 4.21633, 184, 38.1968, 161, 112.226, 157, 119.507, 157, 160.769, 160, 159.556)
+
+[node name="HopperShape" type="Sprite2D" parent="."]
+position = Vector2(112, 59)
+texture = ExtResource("1_xbyto")
