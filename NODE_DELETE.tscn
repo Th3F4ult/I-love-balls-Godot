@@ -6,6 +6,10 @@
 script/source = "extends Area2D
 func DELETE(body):
 	body.queue_free()
+
+
+func TEST(area):
+	area.queue_free()
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ifrg4"]
@@ -21,4 +25,5 @@ shape = SubResource("RectangleShape2D_ifrg4")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_oew8o")
 
+[connection signal="area_entered" from="." to="." method="TEST"]
 [connection signal="body_entered" from="." to="." method="DELETE"]
