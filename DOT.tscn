@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bjfpdtq28xws"]
+[gd_scene load_steps=4 format=3 uid="uid://bjfpdtq28xws"]
+
+[ext_resource type="Texture2D" uid="uid://b3ktoi76togwj" path="res://Dots/RED.png" id="1_fguix"]
 
 [sub_resource type="GDScript" id="GDScript_q2h7j"]
 script/source = "extends RigidBody2D
@@ -20,9 +22,14 @@ script = SubResource("GDScript_q2h7j")
 shape = SubResource("CircleShape2D_pfj8g")
 
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 offset_left = -7.0
 offset_top = -6.0
 offset_right = 7.0
 offset_bottom = 7.0
 mouse_default_cursor_shape = 6
 color = Color(1, 0, 1, 1)
+
+[node name="Red" type="Sprite2D" parent="."]
+scale = Vector2(0.187757, 0.188829)
+texture = ExtResource("1_fguix")
