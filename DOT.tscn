@@ -8,6 +8,13 @@ script/source = "extends RigidBody2D
 var colors = [Color(\"ffffff\"), Color(\"000000\"), Color(255,0,0), Color(0,255,0), Color(0,0,255), Color(255,0,255), Color(255,255,0)]
 
 
+func _process(delta):
+	if get_node_or_null(\"Camera2D\"):
+		get_node(\"Camera2D\").rotation = 0
+		get_node(\"Camera2D\").rotation_degrees = 0
+
+
+
 func _ready():
 	$ColorRect.color = colors.pick_random()
 "

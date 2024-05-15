@@ -2,28 +2,61 @@
 
 [sub_resource type="GDScript" id="GDScript_mokoy"]
 script/source = "extends Node2D
-var globpos = 0; var chosen : String
-func _process(delta): $CanvasLayer/Label.text = str(\"Current nodes: \", self.get_children().size()-11, \"/1000\"); if self.get_children().size() >= 1000: get_tree().reload_current_scene() # This resets in case you have more than 1000 nodes on screen. It restarts the game.
+var globpos = 0; var chosen : String; var FOLLOWCAM 
+var MODE = \"edit\"
+var following = false
+var NodeFollowing 
+func _process(delta): 
+	if following:
+		NodeFollowing.position = get_global_mouse_position()+Vector2(globpos,0)
+	$CanvasLayer/Label.text = str(\"Current nodes: \", self.get_children().size()-12, \"/1000\")
+	if self.get_children().size() >= 1000: 
+		get_tree().reload_current_scene() # This resets in case you have more than 1000 nodes on screen. It restarts the game.
+	if FOLLOWCAM:
+		FOLLOWCAM.add_to_group(\"Invuln\")
+		$Camera2D.zoom = Vector2(4,4)
+		$Camera2D.position = FOLLOWCAM.position
+	else:
+		$Camera2D.zoom = Vector2(1,1)
+		$Camera2D.position = Vector2(578+globpos,322)
 func _input(event):
-	if Input.is_action_pressed(\"click\") and self.get_children().size()-11 <= 1000: Generate(event[\"position\"]+Vector2(globpos,0))
-	if Input.is_action_just_pressed(\"click2\"): $PopupMenu.position = event[\"position\"]; $PopupMenu.popup(); $RayCast2D.position = event[\"position\"]
+	match MODE:
+		\"edit\": 
+			if Input.is_action_pressed(\"click\") and self.get_children().size()-11 <= 1000: Generate(event[\"position\"]+Vector2(globpos,0))
+			if Input.is_action_just_pressed(\"click2\"): $PopupMenu.position = event[\"position\"]; $PopupMenu.popup(); $RayCast2D.position = event[\"position\"]
+		\"grab\": 
+			if Input.is_action_pressed(\"click\"):
+				$RayCast2D.position = event[\"position\"]+Vector2(globpos,0)
+				if $RayCast2D.get_collider(): 
+					following = true
+					NodeFollowing = $RayCast2D.get_collider()
+			if Input.is_action_pressed(\"click2\"):
+				following = false
+				NodeFollowing = null
 	if Input.is_action_just_pressed(\"GeneratorAdd\"): var generator = preload(\"res://NODE_GENERATOR.tscn\").instantiate(); generator.mode = \"fast\"; generator.position = get_local_mouse_position()+Vector2(globpos,0); add_child(generator)
 	if Input.is_action_just_pressed(\"GeneratorAddSlow\"): var generator = preload(\"res://NODE_GENERATOR.tscn\").instantiate(); generator.mode = \"slow\"; generator.position = get_local_mouse_position()+Vector2(globpos,0); add_child(generator)
 	if Input.is_action_pressed(\"DeleteClick\"): $CanvasLayer/Label2.text = str(\"DELETE MODE!!\"); $RayCast2D.position = event[\"position\"]+Vector2(globpos,0); if $RayCast2D.get_collider(): $RayCast2D.get_collider().queue_free()
 	if Input.is_action_just_released(\"DeleteClick\"): $CanvasLayer/Label2.text = str(\"\")
+	if Input.is_key_pressed(KEY_H) and not $CanvasLayer/Help.visible: HELP_SHOW()
 func Generate(positiontogen : Vector2i): var dot = preload(\"res://DOT.tscn\").instantiate(); dot.position = positiontogen; add_child(dot)
 func DELETE(body):
-	body.queue_free()
+	if body.is_in_group(\"Invuln\"):
+		FOLLOWCAM = null
+		body.queue_free()
+	else:
+		body.queue_free()
 func POPUP(index):
 	match index:
 		0: get_tree().change_scene_to_file(\"res://SCENE.tscn\")
 		1: get_tree().paused = not get_tree().paused; $PopupMenu.toggle_item_checked(1)
-		2: $PopupMenu3.position = $PopupMenu.position; $PopupMenu3.popup()
-		3: $PopupMenu4.position = $PopupMenu.position; $PopupMenu4.popup()
-		4: $PopupMenu2.position = $PopupMenu.position; $PopupMenu2.popup()
+		2: $PopupMenu3.position = get_local_mouse_position()+Vector2(globpos,0); $PopupMenu3.popup()
+		3: $PopupMenu4.position = get_local_mouse_position()+Vector2(globpos,0); $PopupMenu4.popup()
+		4: $PopupMenu2.position = get_local_mouse_position()+Vector2(globpos,0); $PopupMenu2.popup()
 		5: var deletor = preload(\"res://NODE_DELETE.tscn\").instantiate(); deletor.position = $PopupMenu.position+Vector2i(globpos,0); add_child(deletor)
 		6: chosen = \"bounce\"; $Popup.position = $PopupMenu.position; $Popup.popup()
 		7: chosen = \"conveyor\"; $Popup.position = $PopupMenu.position; $Popup.popup(); 
+		8: if $RayCast2D.get_collider(): FOLLOWCAM = $RayCast2D.get_collider()
+		9: FOLLOWCAM = null; 
 func LOAD_NEW(index):
 	match index:
 		0: var generator1 = preload(\"res://NODE_GENERATOR.tscn\").instantiate(); generator1.mode = \"fast\"; generator1.position = Vector2i(200,550); add_child(generator1); var generator2 = preload(\"res://NODE_GENERATOR.tscn\").instantiate(); generator2.mode = \"fast\"; generator2.position = Vector2i(200,250); add_child(generator2); var generator3 = preload(\"res://NODE_GENERATOR.tscn\").instantiate(); generator3.mode = \"fast\"; generator3.position = Vector2i(200,400); add_child(generator3); var generator4 = preload(\"res://NODE_GENERATOR.tscn\").instantiate(); generator4.mode = \"fast\"; generator4.position = Vector2i(200,100); add_child(generator4)
@@ -35,7 +68,6 @@ func SPAWN_SCENE_CUST(path):
 	add_child(scene)
 func MOVE(value):
 	globpos = value*100
-	$Camera2D.position.x = 578+(value*100)
 func Create(index):
 	match index:
 		0: var triangle = preload(\"res://NODE_TRIANGLE.tscn\").instantiate(); triangle.position = $PopupMenu.position+Vector2i(globpos,0); add_child(triangle)
@@ -58,7 +90,7 @@ func EDIT(index):
 		3: if $RayCast2D.get_collider(): $RayCast2D.get_collider().scale = Vector2(2,2)
 		4: if $RayCast2D.get_collider(): $RayCast2D.get_collider().scale = Vector2(0.5,0.5)
 		5: if $RayCast2D.get_collider(): $RayCast2D.get_collider().scale = Vector2(1,1)
-		6: if $RayCast2D.get_collider(): $Edit.position = $PopupMenu4.position; $Edit.popup()
+		6: if $RayCast2D.get_collider(): $Edit.position = get_local_mouse_position()+Vector2(globpos,0); $Edit.popup()
 func EDITBTN():
 	var vecx = int($Edit/VBoxContainer/HBoxContainer/LineEdit.text)
 	var vecy = int($Edit/VBoxContainer/HBoxContainer/LineEdit2.text)
@@ -75,10 +107,39 @@ func SET_NEW_SPD(): # This is sort of redundant.
 func EDIT_SCL():
 	var rot = int($Edit/VBoxContainer/HBoxContainer2/LineEdit.text)
 	if $RayCast2D.get_collider(): $RayCast2D.get_collider().rotation = int(rot)
+func HELP_SHOW():
+	$CanvasLayer/Help.visible = true
+	await get_tree().create_timer(5).timeout
+	$CanvasLayer/Help.visible = false
+
+
+
+func DRAG_OR_EDIT(toggled_on):
+	match toggled_on:
+		true: 
+			MODE = \"grab\"
+			$CanvasLayer/Help.text = \"HELP:
+
+Click: Select node or move already selected node 
+Right click: Deselect node
+I: Create a generator under the mouse
+Shift-I: Same but slow
+H: Show this help
+\"
+		false: 
+			MODE = \"edit\"
+			$CanvasLayer/Help.text = \"HELP:
+
+Click: Generate a ball
+Right click: Open menu
+I: Create a generator under the mouse
+Shift-I: Same but slow
+H: Show this help
+\"
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qwj7u"]
-size = Vector2(43476, 473.5)
+size = Vector2(184016, 782.5)
 
 [node name="Node2D" type="Node2D"]
 process_mode = 3
@@ -104,13 +165,13 @@ collide_with_areas = true
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(3197, 1493.25)
+position = Vector2(17831, 1647.75)
 shape = SubResource("RectangleShape2D_qwj7u")
 
 [node name="PopupMenu" type="PopupMenu" parent="."]
 process_mode = 3
 size = Vector2i(235, 278)
-item_count = 8
+item_count = 10
 item_0/text = "Restart"
 item_0/id = 0
 item_1/text = "Pause"
@@ -128,6 +189,10 @@ item_6/text = "Create Bouncer here..."
 item_6/id = 6
 item_7/text = "Create conveyor here..."
 item_7/id = 7
+item_8/text = "Camera on this node"
+item_8/id = 8
+item_9/text = "Reset Camera"
+item_9/id = 9
 
 [node name="PopupMenu3" type="PopupMenu" parent="."]
 process_mode = 3
@@ -157,14 +222,15 @@ filters = PackedStringArray("*.tscn", "*.TSCN")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(578, 322)
+rotation_smoothing_speed = 1000.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="HScrollBar" type="HScrollBar" parent="CanvasLayer"]
 offset_left = 5.0
-offset_top = 619.0
-offset_right = 385.0
-offset_bottom = 627.0
+offset_top = 621.0
+offset_right = 387.0
+offset_bottom = 629.0
 scale = Vector2(3, 3)
 custom_step = 1.0
 
@@ -179,6 +245,28 @@ offset_left = 945.0
 offset_top = 181.0
 offset_right = 985.0
 offset_bottom = 204.0
+
+[node name="Help" type="RichTextLabel" parent="CanvasLayer"]
+visible = false
+offset_left = 622.0
+offset_top = 67.0
+offset_right = 1105.0
+offset_bottom = 384.0
+text = "HELP:
+
+Click: Generate a ball
+Right click: Open menu
+I: Create a generator under the mouse
+Shift-I: Same but slow
+H: Show this help
+"
+
+[node name="CheckButton" type="CheckButton" parent="CanvasLayer"]
+offset_left = 1004.0
+offset_top = 579.0
+offset_right = 1138.0
+offset_bottom = 610.0
+text = "Drag mode"
 
 [node name="PopupMenu4" type="PopupMenu" parent="."]
 item_count = 7
@@ -250,6 +338,7 @@ text = "Rotate!"
 [connection signal="index_pressed" from="PopupMenu3" to="." method="Create"]
 [connection signal="file_selected" from="FileDialog" to="." method="SPAWN_SCENE_CUST"]
 [connection signal="value_changed" from="CanvasLayer/HScrollBar" to="." method="MOVE"]
+[connection signal="toggled" from="CanvasLayer/CheckButton" to="." method="DRAG_OR_EDIT"]
 [connection signal="index_pressed" from="PopupMenu4" to="." method="EDIT"]
 [connection signal="pressed" from="Popup/HBoxContainer/Button" to="." method="SET_NEW_SPD"]
 [connection signal="pressed" from="Edit/VBoxContainer/HBoxContainer/Button" to="." method="EDITBTN"]
