@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://ins2p07swwyi"]
+
+[sub_resource type="GDScript" id="GDScript_aa2py"]
+script/source = "extends StaticBody2D
+
+
+@export var BounceStr : int = -1000
+
+func Body_accel(body):
+	if body.is_in_group(\"ball\"):
+		body.linear_velocity.y = BounceStr
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3vemk"]
+size = Vector2(373, 20)
+
+[node name="StaticBody2D" type="StaticBody2D"]
+script = SubResource("GDScript_aa2py")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(0, 20)
+shape = SubResource("RectangleShape2D_3vemk")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_3vemk")
+
+[node name="Node2D" type="Node2D" parent="Area2D"]
+
+[node name="ColorRect" type="ColorRect" parent="Area2D/Node2D"]
+offset_left = -186.0
+offset_top = 10.0
+offset_right = 187.0
+offset_bottom = 30.0
+
+[connection signal="body_entered" from="Area2D" to="." method="Body_accel"]

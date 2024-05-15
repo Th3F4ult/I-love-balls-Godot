@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://o2h6t2vl8q8p"]
+
+[sub_resource type="GDScript" id="GDScript_8utmw"]
+script/source = "extends StaticBody2D
+
+@export var Speed : int = -1000
+
+func Body_accel(body):
+	if body.is_in_group(\"ball\"):
+		if scale == Vector2(-1,1):
+			body.linear_velocity.x = -Speed
+			return
+		body.linear_velocity.x = Speed
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3vemk"]
+size = Vector2(373, 20)
+
+[node name="StaticBody2D" type="StaticBody2D"]
+script = SubResource("GDScript_8utmw")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(0, 20)
+shape = SubResource("RectangleShape2D_3vemk")
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="Node2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Area2D"]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_3vemk")
+
+[node name="ColorRect" type="ColorRect" parent="Node2D"]
+offset_left = -186.0
+offset_top = 10.0
+offset_right = 187.0
+offset_bottom = 30.0
+
+[node name="Label" type="Label" parent="."]
+offset_left = -19.0
+offset_top = 31.0
+offset_right = 21.0
+offset_bottom = 54.0
+text = "<<<<<"
+
+[connection signal="body_entered" from="Node2D/Area2D" to="." method="Body_accel"]
+[connection signal="body_entered" from="Node2D/Area2D" to="Node2D" method="Body_accel"]
